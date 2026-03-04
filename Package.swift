@@ -17,21 +17,9 @@ let package = Package(
             targets: ["Coder Primitives"]
         ),
     ],
-    dependencies: [
-        .package(path: "../swift-serialization-primitives"),
-        .package(path: "../swift-binary-primitives"),
-        .package(path: "../swift-ascii-primitives"),
-        .package(path: "../swift-error-primitives"),
-    ],
     targets: [
         .target(
-            name: "Coder Primitives",
-            dependencies: [
-                .product(name: "Serialization Primitives", package: "swift-serialization-primitives"),
-                .product(name: "Binary Primitives", package: "swift-binary-primitives"),
-                .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
-                .product(name: "Error Primitives", package: "swift-error-primitives"),
-            ]
+            name: "Coder Primitives"
         ),
     ],
     swiftLanguageModes: [.v6]
