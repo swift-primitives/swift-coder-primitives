@@ -84,3 +84,24 @@ extension Coder {
         func encode(_ output: Output, into buffer: inout EncodeBuffer) throws(EncodeFailure)
     }
 }
+
+// MARK: - Buffer-constructing encode convenience
+
+extension Coder.`Protocol` where EncodeBuffer: RangeReplaceableCollection {
+
+    /// Encodes a value, returning a new buffer.
+    ///
+    /// Creates an empty buffer, encodes the value into it, and returns
+    /// the result. For appending to an existing buffer, use
+    /// ``encode(_:into:)`` directly.
+    ///
+    /// - Parameter output: The value to encode.
+    /// - Returns: A new buffer containing the encoded representation.
+    /// - Throws: `EncodeFailure` if encoding fails.
+    @inlinable
+    public func encode(_ output: Output) throws(EncodeFailure) -> EncodeBuffer {
+        var buffer = EncodeBuffer()
+        try encode(output, into: &buffer)
+        return buffer
+    }
+}
