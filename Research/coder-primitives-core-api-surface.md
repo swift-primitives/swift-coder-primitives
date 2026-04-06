@@ -61,8 +61,8 @@ extension Coder {
         associatedtype DecodeInput: ~Copyable & ~Escapable
         associatedtype EncodeBuffer
         associatedtype Output
-        associatedtype DecodeFailure: Swift.Error & Sendable
-        associatedtype EncodeFailure: Swift.Error & Sendable
+        associatedtype DecodeFailure: Swift.Error
+        associatedtype EncodeFailure: Swift.Error
 
         func decode(_ input: inout DecodeInput) throws(DecodeFailure) -> Output
         func encode(_ output: Output, into buffer: inout EncodeBuffer) throws(EncodeFailure)
@@ -350,12 +350,12 @@ extension Coder {
         /// The error type for decode failures.
         ///
         /// Use `Never` for infallible decoders.
-        associatedtype DecodeFailure: Swift.Error & Sendable
+        associatedtype DecodeFailure: Swift.Error
 
         /// The error type for encode failures.
         ///
         /// Use `Never` for infallible encoders.
-        associatedtype EncodeFailure: Swift.Error & Sendable
+        associatedtype EncodeFailure: Swift.Error
 
         /// Decodes a value from the input.
         ///

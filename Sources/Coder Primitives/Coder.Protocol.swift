@@ -55,12 +55,12 @@ extension Coder {
         /// The error type for decode failures.
         ///
         /// Use `Never` for infallible decoders.
-        associatedtype DecodeFailure: Swift.Error & Sendable
+        associatedtype DecodeFailure: Swift.Error
 
         /// The error type for encode failures.
         ///
         /// Use `Never` for infallible encoders.
-        associatedtype EncodeFailure: Swift.Error & Sendable
+        associatedtype EncodeFailure: Swift.Error
 
         /// Decodes a value from the input.
         ///
