@@ -27,11 +27,6 @@ jobs:
   docs:
     uses: swift-institute/.github/.github/workflows/swift-docs.yml@main
     with:
-      umbrella-module: Coder_Primitives
-      umbrella-display-name: "Coder Primitives"
-      umbrella-bundle-id: "swift-coder-primitives.Coder-Primitives"
-      umbrella-docc-path: "Sources/Coder Primitives/Coder Primitives.docc"
-      exclude-modules: ""
       enable-private-repos: true
     secrets:
       PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
