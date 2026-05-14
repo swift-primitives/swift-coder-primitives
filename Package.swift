@@ -16,10 +16,22 @@ let package = Package(
             name: "Coder Primitives",
             targets: ["Coder Primitives"]
         ),
+        .library(
+            name: "Coder Primitives Test Support",
+            targets: ["Coder Primitives Test Support"]
+        ),
     ],
     targets: [
         .target(
             name: "Coder Primitives"
+        ),
+
+        // MARK: - Tests
+
+        .target(
+            name: "Coder Primitives Test Support",
+            dependencies: ["Coder Primitives"],
+            path: "Tests/Support"
         ),
     ],
     swiftLanguageModes: [.v6]
