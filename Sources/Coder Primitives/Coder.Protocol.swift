@@ -42,7 +42,7 @@ extension Coder {
     ///     func encode(_ output: UInt32, into buffer: inout [UInt8]) { ... }
     /// }
     /// ```
-    public protocol `Protocol`<DecodeInput, EncodeBuffer, Output> {
+    public protocol `Protocol`<DecodeInput, EncodeBuffer, Output>: ~Copyable {
         /// The input type for decoding (typically a cursor or byte span).
         associatedtype DecodeInput: ~Copyable & ~Escapable
 
@@ -70,7 +70,7 @@ extension Coder {
         /// - Parameter input: The input to decode from. Modified to reflect consumption.
         /// - Returns: The decoded value.
         /// - Throws: `DecodeFailure` if decoding fails.
-        func decode(_ input: inout DecodeInput) throws(DecodeFailure) -> Output
+        borrowing func decode(_ input: inout DecodeInput) throws(DecodeFailure) -> Output
 
         /// Encodes a value by appending to the buffer.
         ///
@@ -81,13 +81,13 @@ extension Coder {
         ///   - output: The value to encode.
         ///   - buffer: The buffer to append to.
         /// - Throws: `EncodeFailure` if encoding fails.
-        func encode(_ output: Output, into buffer: inout EncodeBuffer) throws(EncodeFailure)
+        borrowing func encode(_ output: Output, into buffer: inout EncodeBuffer) throws(EncodeFailure)
     }
 }
 
 // MARK: - Buffer-constructing encode convenience
 
-extension Coder.`Protocol` where EncodeBuffer: RangeReplaceableCollection {
+extension Coder.`Protocol` where Self: ~Copyable, EncodeBuffer: RangeReplaceableCollection {
 
     /// Encodes a value, returning a new buffer.
     ///
@@ -99,7 +99,7 @@ extension Coder.`Protocol` where EncodeBuffer: RangeReplaceableCollection {
     /// - Returns: A new buffer containing the encoded representation.
     /// - Throws: `EncodeFailure` if encoding fails.
     @inlinable
-    public func encode(_ output: Output) throws(EncodeFailure) -> EncodeBuffer {
+    public borrowing func encode(_ output: Output) throws(EncodeFailure) -> EncodeBuffer {
         var buffer = EncodeBuffer()
         try encode(output, into: &buffer)
         return buffer
