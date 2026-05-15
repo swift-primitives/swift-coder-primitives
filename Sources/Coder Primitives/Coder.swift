@@ -113,4 +113,20 @@ extension Coder {
             try _serialize(value, &buffer)
         }
     }
+
+    /// A closure-backed coder that cannot fail.
+    ///
+    /// `Coder.Pure<Input, Output, Buffer>` is shorthand for
+    /// `Coder.Witness<Input, Output, Buffer, Never>`. Use it to elide the
+    /// `Failure` type argument when the coder is infallible in both
+    /// directions.
+    ///
+    /// ```swift
+    /// let c = Coder.Pure<Substring, Int, [UInt8]>(
+    ///     parse: { input in /* ... */ },
+    ///     serialize: { value, buffer in /* ... */ }
+    /// )
+    /// ```
+    public typealias Pure<Input, Output, Buffer> = Witness<Input, Output, Buffer, Never>
+        where Input: ~Copyable & ~Escapable
 }
