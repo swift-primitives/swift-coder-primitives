@@ -2,113 +2,115 @@
 //  Coder.swift
 //  swift-coder-primitives
 //
-//  Closure-backed bidirectional coder witness.
+//  Namespace for bidirectional coding primitives.
+//
+//  The family-as-enum-namespace + nested-Witness shape (validated in
+//  `family-as-enum-namespace-witness-nested`, CONFIRMED 6/6) restores the
+//  enum-namespace at the root. The closure-backed witness lives as one
+//  combinator type among many, nested under the namespace as
+//  ``Coder/Witness``.
 //
 
 internal import Parser_Primitives_Core
 internal import Serializer_Primitives_Core
 
-/// A closure-backed bidirectional coder witness.
+/// Namespace for bidirectional coding primitives.
 ///
-/// `Coder` stores a parse closure and a serialize closure and exposes both as
-/// the methods required by ``Coder/Protocol`` (which refines
-/// ``Parser/Protocol`` and ``Serializer/Protocol``).
+/// `Coder.Protocol` (the nested protocol) is the canonical surface for
+/// bidirectional codecs; it refines ``Parser/Protocol`` and
+/// ``Serializer/Protocol`` so a single conformer is both a parser and
+/// a serializer with same-name unified `Input`/`Output`/`Buffer`/`Failure`.
 ///
-/// ## Example
-///
-/// ```swift
-/// let uint16BE = Coder<Binary.Bytes.Input, UInt16, [UInt8], Binary.Bytes.Machine.Fault>(
-///     parse: { input in
-///         let hi = try input.advance()
-///         let lo = try input.advance()
-///         return UInt16(hi) << 8 | UInt16(lo)
-///     },
-///     serialize: { value, buffer in
-///         buffer.append(UInt8(value >> 8))
-///         buffer.append(UInt8(truncatingIfNeeded: value))
-///     }
-/// )
-/// ```
-///
-/// ## Leaf Witness
-///
-/// `Coder` is a leaf conformer: `Body == Never`. The default `body` getter
-/// inherited from ``Parser/Protocol`` and ``Serializer/Protocol`` traps if
-/// invoked.
-public struct Coder<
-    Input: ~Copyable & ~Escapable,
-    Output,
-    Buffer,
-    Failure: Swift.Error
->: __CoderProtocol {
-    @usableFromInline
-    var _parse: (inout Input) throws(Failure) -> Output
+/// ``Coder/Witness`` is the closure-backed conformer used for ad-hoc
+/// witnesses; additional combinator types nest under this namespace.
+public enum Coder {}
 
-    @usableFromInline
-    var _serialize: (Output, inout Buffer) throws(Failure) -> Void
+extension Coder {
 
-    /// Creates a coder from parse and serialize closures.
+    /// A closure-backed bidirectional coder — the canonical witness for
+    /// ``Coder/Protocol``.
     ///
-    /// - Parameters:
-    ///   - parse: Parses an `Output` value from the input cursor.
-    ///   - serialize: Serializes an `Output` value by appending to the buffer.
-    @inlinable
-    public init(
-        parse: @escaping (inout Input) throws(Failure) -> Output,
-        serialize: @escaping (Output, inout Buffer) throws(Failure) -> Void
-    ) {
-        self._parse = parse
-        self._serialize = serialize
-    }
-}
-
-// MARK: - Body == Never (leaf conformer per [API-IMPL-020])
-
-extension Coder where Input: ~Copyable & ~Escapable {
-    public typealias Body = Never
-
-    /// Leaf coders do not have a body — ``parse(_:)`` and ``serialize(_:into:)``
-    /// are implemented directly via stored closures.
+    /// `Coder.Witness` stores a parse closure and a serialize closure and
+    /// exposes both as the methods required by ``Coder/Protocol`` (which
+    /// refines ``Parser/Protocol`` and ``Serializer/Protocol``).
     ///
-    /// An explicit getter is required because both ``Parser/Protocol`` and
-    /// ``Serializer/Protocol`` provide a default `body: Never` getter in their
-    /// `where Body == Never` extensions; without this override Swift cannot
-    /// pick between the two inherited candidates.
-    @inlinable
-    public var body: Never {
-        borrowing get {
-            fatalError("Coder is a leaf witness — parse(_:) and serialize(_:into:) are implemented directly via stored closures")
+    /// ## Example
+    ///
+    /// ```swift
+    /// let uint16BE = Coder.Witness<Binary.Bytes.Input, UInt16, [UInt8], Binary.Bytes.Machine.Fault>(
+    ///     parse: { input in
+    ///         let hi = try input.advance()
+    ///         let lo = try input.advance()
+    ///         return UInt16(hi) << 8 | UInt16(lo)
+    ///     },
+    ///     serialize: { value, buffer in
+    ///         buffer.append(UInt8(value >> 8))
+    ///         buffer.append(UInt8(truncatingIfNeeded: value))
+    ///     }
+    /// )
+    /// ```
+    ///
+    /// ## Leaf Witness
+    ///
+    /// `Coder.Witness` is a leaf conformer: it implements ``parse(_:)`` and
+    /// ``serialize(_:into:)`` directly via stored closures rather than
+    /// composing through a `body`.
+    public struct Witness<
+        Input: ~Copyable & ~Escapable,
+        Output,
+        Buffer,
+        Failure: Swift.Error
+    >: Coder.`Protocol` {
+        @usableFromInline
+        var _parse: (inout Input) throws(Failure) -> Output
+
+        @usableFromInline
+        var _serialize: (Output, inout Buffer) throws(Failure) -> Void
+
+        /// Creates a coder witness from parse and serialize closures.
+        ///
+        /// - Parameters:
+        ///   - parse: Parses an `Output` value from the input cursor.
+        ///   - serialize: Serializes an `Output` value by appending to the buffer.
+        @inlinable
+        public init(
+            parse: @escaping (inout Input) throws(Failure) -> Output,
+            serialize: @escaping (Output, inout Buffer) throws(Failure) -> Void
+        ) {
+            self._parse = parse
+            self._serialize = serialize
+        }
+
+        public typealias Body = Never
+
+        /// Leaf coder witnesses do not have a body — ``parse(_:)`` and
+        /// ``serialize(_:into:)`` are implemented directly via stored closures.
+        ///
+        /// An explicit getter is required because both ``Parser/Protocol`` and
+        /// ``Serializer/Protocol`` provide a default `body: Never` getter in
+        /// their `where Body == Never` extensions; without this override Swift
+        /// cannot pick between the two inherited candidates.
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("Coder.Witness is a leaf — parse(_:) and serialize(_:into:) are implemented directly via stored closures")
+            }
+        }
+
+        /// Parses an `Output` value from the input.
+        ///
+        /// Delegates to the stored parse closure.
+        @inlinable
+        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+            try _parse(&input)
+        }
+
+        /// Serializes an `Output` value by appending to the buffer.
+        ///
+        /// Delegates to the stored serialize closure.
+        @inlinable
+        public borrowing func serialize(_ value: Output, into buffer: inout Buffer) throws(Failure) {
+            try _serialize(value, &buffer)
         }
     }
-}
-
-// MARK: - Coder.Protocol Witness Methods
-
-extension Coder where Input: ~Copyable & ~Escapable {
-    /// Parses an `Output` value from the input.
-    ///
-    /// Delegates to the stored parse closure.
-    @inlinable
-    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-        try _parse(&input)
-    }
-
-    /// Serializes an `Output` value by appending to the buffer.
-    ///
-    /// Delegates to the stored serialize closure.
-    @inlinable
-    public borrowing func serialize(_ output: Output, into buffer: inout Buffer) throws(Failure) {
-        try _serialize(output, &buffer)
-    }
-}
-
-// MARK: - Protocol Typealias Hoist
-
-extension Coder where Input: ~Copyable & ~Escapable {
-    /// The bidirectional coder protocol, hoisted from module scope.
-    ///
-    /// `Coder.Protocol` is the consumer-facing path to ``__CoderProtocol``;
-    /// module-level declaration is required because Swift forbids protocols
-    /// nested in generic contexts.
-    public typealias `Protocol` = __CoderProtocol
 }
