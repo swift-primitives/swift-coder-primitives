@@ -5,6 +5,9 @@
 //  Canonical attachment protocol for bidirectional coding.
 //
 
+public import Parser_Primitives_Core
+public import Serializer_Primitives_Core
+
 /// A type that has a canonical coder.
 ///
 /// Conforming types declare their canonical ``Coder`` and provide a static
@@ -38,32 +41,32 @@ extension Codable where Coder.Output == Self {
     /// Encodes this value by appending to a buffer.
     ///
     /// - Parameter buffer: The buffer to append to.
-    /// - Throws: `Coder.EncodeFailure` if encoding fails.
+    /// - Throws: `Coder.Failure` if encoding fails.
     @inlinable
-    public func encode(into buffer: inout Coder.EncodeBuffer) throws(Coder.EncodeFailure) {
-        try Self.coder.encode(self, into: &buffer)
+    public func encode(into buffer: inout Coder.Buffer) throws(Coder.Failure) {
+        try Self.coder.serialize(self, into: &buffer)
     }
 
     /// Decodes a value from the input using the canonical coder.
     ///
     /// - Parameter input: The input to decode from. Modified to reflect consumption.
-    /// - Throws: `Coder.DecodeFailure` if decoding fails.
+    /// - Throws: `Coder.Failure` if decoding fails.
     @inlinable
-    public init(decoding input: inout Coder.DecodeInput) throws(Coder.DecodeFailure) {
-        self = try Self.coder.decode(&input)
+    public init(decoding input: inout Coder.Input) throws(Coder.Failure) {
+        self = try Self.coder.parse(&input)
     }
 }
 
 // MARK: - Buffer-constructing encode
 
-extension Codable where Coder.Output == Self, Coder.EncodeBuffer: RangeReplaceableCollection {
+extension Codable where Coder.Output == Self, Coder.Buffer: RangeReplaceableCollection {
 
     /// Encodes this value, returning a new buffer.
     ///
     /// - Returns: A new buffer containing the encoded representation.
-    /// - Throws: `Coder.EncodeFailure` if encoding fails.
+    /// - Throws: `Coder.Failure` if encoding fails.
     @inlinable
-    public func encoded() throws(Coder.EncodeFailure) -> Coder.EncodeBuffer {
-        try Self.coder.encode(self)
+    public func encoded() throws(Coder.Failure) -> Coder.Buffer {
+        try Self.coder.serialize(self)
     }
 }

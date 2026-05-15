@@ -21,9 +21,19 @@ let package = Package(
             targets: ["Coder Primitives Test Support"]
         ),
     ],
+    dependencies: [
+        .package(path: "../swift-parser-primitives"),
+        .package(path: "../swift-serializer-primitives"),
+        .package(path: "../swift-either-primitives"),
+    ],
     targets: [
         .target(
-            name: "Coder Primitives"
+            name: "Coder Primitives",
+            dependencies: [
+                .product(name: "Parser Primitives Core", package: "swift-parser-primitives"),
+                .product(name: "Serializer Primitives Core", package: "swift-serializer-primitives"),
+                .product(name: "Either Primitives", package: "swift-either-primitives"),
+            ]
         ),
 
         // MARK: - Tests
