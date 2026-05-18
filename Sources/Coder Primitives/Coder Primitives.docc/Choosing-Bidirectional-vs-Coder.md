@@ -48,7 +48,7 @@ decomposition into separate Parser + Serializer is artificial for
 bidirectional types."*
 
 Canonical example: binary format codecs. JSON's `UInt32Coder` decodes
-from a `Binary.Bytes.Input` cursor and encodes into a `[UInt8]` heap
+from a `Byte.Input` cursor and encodes into a `[UInt8]` heap
 buffer — distinct types, distinct failure modes, no shared body.
 
 ## The boundary in one line
