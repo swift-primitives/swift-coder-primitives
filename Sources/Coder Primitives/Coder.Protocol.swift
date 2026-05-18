@@ -34,12 +34,12 @@ extension Coder {
     ///
     /// ```swift
     /// struct UInt32Coder: Coder.`Protocol` {
-    ///     typealias Input   = Binary.Bytes.Input
+    ///     typealias Input   = Byte.Input
     ///     typealias Buffer  = [UInt8]
     ///     typealias Output  = UInt32
     ///     typealias Failure = Binary.Bytes.Machine.Fault
     ///
-    ///     func parse(_ input: inout Binary.Bytes.Input)
+    ///     func parse(_ input: inout Byte.Input)
     ///         throws(Binary.Bytes.Machine.Fault) -> UInt32 { ... }
     ///
     ///     func serialize(_ output: UInt32, into buffer: inout [UInt8]) { ... }
