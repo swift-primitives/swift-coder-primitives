@@ -37,7 +37,7 @@ extension Coder {
     /// ## Example
     ///
     /// ```swift
-    /// let uint16BE = Coder.Witness<Byte.Input, UInt16, [UInt8], Binary.Bytes.Machine.Fault>(
+    /// let uint16BE = Coder.Witness<Byte.Input, UInt16, [UInt8], Binary.Machine.Fault>(
     ///     parse: { input in
     ///         let hi = try input.advance()
     ///         let lo = try input.advance()

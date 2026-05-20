@@ -37,10 +37,10 @@ extension Coder {
     ///     typealias Input   = Byte.Input
     ///     typealias Buffer  = [UInt8]
     ///     typealias Output  = UInt32
-    ///     typealias Failure = Binary.Bytes.Machine.Fault
+    ///     typealias Failure = Binary.Machine.Fault
     ///
     ///     func parse(_ input: inout Byte.Input)
-    ///         throws(Binary.Bytes.Machine.Fault) -> UInt32 { ... }
+    ///         throws(Binary.Machine.Fault) -> UInt32 { ... }
     ///
     ///     func serialize(_ output: UInt32, into buffer: inout [UInt8]) { ... }
     /// }
