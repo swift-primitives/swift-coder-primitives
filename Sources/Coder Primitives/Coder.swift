@@ -81,6 +81,7 @@ extension Coder {
             self._serialize = serialize
         }
 
+        /// A leaf coder has no composed body.
         public typealias Body = Never
 
         /// Leaf coder witnesses do not have a body — ``parse(_:)`` and
