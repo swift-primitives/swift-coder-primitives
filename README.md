@@ -135,7 +135,7 @@ The surface is small and early: the protocol, one closure-backed witness, and th
 ## Community
 
 <!-- BEGIN: discussion -->
-*Discussion thread will be created at first public flip.*
+*Discussion thread will be created at first public release.*
 <!-- END: discussion -->
 
 ## License
