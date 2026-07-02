@@ -128,5 +128,5 @@ extension Coder {
     /// )
     /// ```
     public typealias Pure<Input, Output, Buffer> = Witness<Input, Output, Buffer, Never>
-        where Input: ~Copyable & ~Escapable
+    where Input: ~Copyable & ~Escapable
 }
