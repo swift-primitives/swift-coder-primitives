@@ -46,6 +46,6 @@ extension Coder {
     /// }
     /// ```
     public protocol `Protocol`<Input, Output, Buffer, Failure>:
-        Parser.`Protocol`, Serializer.`Protocol`
+        Parser.`Protocol`, Serializer.`Protocol`, ~Copyable
     {}
 }

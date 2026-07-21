@@ -34,6 +34,6 @@ extension Parser {
     /// verdict GREEN): forward-order APPEND emission through
     /// ``Serializer/Protocol`` is byte-equal to reverse-order prepend printing,
     /// with backtracking expressible as a value-copy checkpoint of the buffer.
-    public protocol Bidirectional<Input, Output, Failure>: Coder.`Protocol`
+    public protocol Bidirectional<Input, Output, Failure>: Coder.`Protocol`, ~Copyable
     where Buffer == Input {}
 }

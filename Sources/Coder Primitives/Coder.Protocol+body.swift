@@ -8,7 +8,7 @@
 internal import Parser_Primitives_Core
 public import Serializer_Primitives_Core
 
-extension Parser.`Protocol` {
+extension Parser.`Protocol` where Self: ~Copyable {
 
     /// Parser-side accessor for `body`. In this extension only
     /// `Parser.Protocol.body` is in scope, so the unqualified reference
@@ -21,7 +21,7 @@ extension Parser.`Protocol` {
     }
 }
 
-extension Coder.`Protocol` {
+extension Coder.`Protocol` where Self: ~Copyable {
 
     /// Satisfies ``Serializer/Protocol``'s `body` requirement on behalf of
     /// every ``Coder/Protocol`` conformer, forwarding to the (unified)
@@ -53,5 +53,21 @@ extension Coder.`Protocol` {
     @_implements(Serializer.`Protocol`, body)
     public var __serializerBody: Body {
         _read { yield __parserBody }
+    }
+}
+
+extension Coder.`Protocol` where Self: ~Copyable, Body == Never {
+
+    /// Pins the PARSER-side `body` witness for leaf coders (`Body == Never`,
+    /// `parse`/`serialize` implemented directly). Without this, witness
+    /// matching sees TWO extension members named `body` of type `Never` —
+    /// `Parser.Protocol`'s leaf default and `Serializer.Protocol`'s leaf
+    /// default — and fails with "multiple matching properties named 'body'".
+    /// The serializer side is already pinned by the forwarder above.
+    @_implements(Parser.`Protocol`, body)
+    public var __parserLeafBody: Never {
+        borrowing get {
+            fatalError("\(Self.self) is a leaf coder — implement parse(_:) directly")
+        }
     }
 }
