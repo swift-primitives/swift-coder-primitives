@@ -8,6 +8,19 @@
 internal import Parser_Primitives_Core
 public import Serializer_Primitives_Core
 
+extension Parser.`Protocol` {
+
+    /// Parser-side accessor for `body`. In this extension only
+    /// `Parser.Protocol.body` is in scope, so the unqualified reference
+    /// binds statically to the conformer's declaration — an unqualified
+    /// `body` inside the `Coder.Protocol` forwarder below resolves to the
+    /// SERIALIZER requirement (whose witness is that forwarder itself) and
+    /// recurses until stack exhaustion.
+    internal var __parserBody: Body {
+        _read { yield body }
+    }
+}
+
 extension Coder.`Protocol` {
 
     /// Satisfies ``Serializer/Protocol``'s `body` requirement on behalf of
@@ -39,6 +52,6 @@ extension Coder.`Protocol` {
     /// `get` forwarding to `body` would consume a borrowed value.
     @_implements(Serializer.`Protocol`, body)
     public var __serializerBody: Body {
-        _read { yield body }
+        _read { yield __parserBody }
     }
 }
