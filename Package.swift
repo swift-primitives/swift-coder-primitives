@@ -17,6 +17,10 @@ let package = Package(
             targets: ["Coder Primitives"]
         ),
         .library(
+            name: "Coder Parser Primitives",
+            targets: ["Coder Parser Primitives"]
+        ),
+        .library(
             name: "Coder Primitives Test Support",
             targets: ["Coder Primitives Test Support"]
         ),
@@ -25,6 +29,8 @@ let package = Package(
         .package(url: "https://github.com/swift-primitives/swift-parser-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-serializer-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-either-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-product-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-pair-primitives.git", branch: "main"),
     ],
     targets: [
         .target(
@@ -36,12 +42,32 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Parser combinator emission rows (the coder-unification surface)
+
+        .target(
+            name: "Coder Parser Primitives",
+            dependencies: [
+                "Coder Primitives",
+                .product(name: "Parser Primitives", package: "swift-parser-primitives"),
+                .product(name: "Parser Pair Primitives", package: "swift-parser-primitives"),
+                .product(name: "Serializer Primitives Core", package: "swift-serializer-primitives"),
+                .product(name: "Either Primitives", package: "swift-either-primitives"),
+                .product(name: "Product Primitives", package: "swift-product-primitives"),
+                .product(name: "Pair Primitives", package: "swift-pair-primitives"),
+            ]
+        ),
+
         // MARK: - Tests
 
         .target(
             name: "Coder Primitives Test Support",
             dependencies: ["Coder Primitives"],
             path: "Tests/Support"
+        ),
+        .testTarget(
+            name: "Coder Parser Primitives Tests",
+            dependencies: ["Coder Parser Primitives"],
+            path: "Tests/Coder Parser Primitives Tests"
         ),
     ],
     swiftLanguageModes: [.v6]
