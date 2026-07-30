@@ -33,7 +33,7 @@ struct Test {
             upstream: text,
             downstream: Parser.Conversion.Witness<Void, String, Parser.Conversion.Error>(
                 apply: { _ in text },
-                unapply: { (value: String) throws(Parser.Conversion.Error) -> Void in
+                unapply: { (value: String) throws(Parser.Conversion.Error) in
                     guard value == text else { throw .absentCase }
                     return ()
                 }
@@ -93,7 +93,7 @@ struct Test {
             // Substring-instantiable at L1.)
             let coder = Test.constant("a")
             var buffer: Substring = "prefix:"
-            #expect(throws: (any Error).self) {
+            #expect(throws: (any Swift.Error).self) {
                 try coder.serialize("b", into: &buffer)
             }
             #expect(buffer == "prefix:")

@@ -10,7 +10,9 @@ public import Serializer_Primitives_Core
 
 extension Parser.`Protocol` where Self: ~Copyable {
 
-    /// Parser-side accessor for `body`. In this extension only
+    /// Parser-side accessor for `body`.
+    ///
+    /// In this extension only
     /// `Parser.Protocol.body` is in scope, so the unqualified reference
     /// binds statically to the conformer's declaration — an unqualified
     /// `body` inside the `Coder.Protocol` forwarder below resolves to the
@@ -50,7 +52,7 @@ extension Coder.`Protocol` where Self: ~Copyable {
     ///
     /// The `_read` coroutine is required: `Body: ~Copyable`, so a plain
     /// `get` forwarding to `body` would consume a borrowed value.
-    @_implements(Serializer.`Protocol`, body)
+    @_implements(Serializer.`Protocol`,body)
     public var __serializerBody: Body {
         _read { yield __parserBody }
     }
@@ -59,12 +61,14 @@ extension Coder.`Protocol` where Self: ~Copyable {
 extension Coder.`Protocol` where Self: ~Copyable, Body == Never {
 
     /// Pins the PARSER-side `body` witness for leaf coders (`Body == Never`,
-    /// `parse`/`serialize` implemented directly). Without this, witness
+    /// `parse`/`serialize` implemented directly).
+    ///
+    /// Without this, witness
     /// matching sees TWO extension members named `body` of type `Never` —
     /// `Parser.Protocol`'s leaf default and `Serializer.Protocol`'s leaf
     /// default — and fails with "multiple matching properties named 'body'".
     /// The serializer side is already pinned by the forwarder above.
-    @_implements(Parser.`Protocol`, body)
+    @_implements(Parser.`Protocol`,body)
     public var __parserLeafBody: Never {
         borrowing get {
             fatalError("\(Self.self) is a leaf coder — implement parse(_:) directly")
