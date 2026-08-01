@@ -23,10 +23,13 @@ import Testing
 
 @Suite
 struct `Coder Witness Dispatch` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
 
     // MARK: Generic dispatch helpers — the load-bearing part.
 
-    static func serializeViaWitness<S: Serializer.`Protocol`>(
+    private static func serializeViaWitness<S: Serializer.`Protocol`>(
         _ serializer: borrowing S,
         _ value: S.Output,
         into buffer: inout S.Buffer
@@ -34,7 +37,7 @@ struct `Coder Witness Dispatch` {
         try serializer.serialize(value, into: &buffer)
     }
 
-    static func parseViaWitness<P: Parser.`Protocol`>(
+    private static func parseViaWitness<P: Parser.`Protocol`>(
         _ parser: borrowing P,
         _ input: inout P.Input
     ) throws -> P.Output {
@@ -43,27 +46,11 @@ struct `Coder Witness Dispatch` {
 
     // MARK: Shape 2 — leaf conformer (the Bearer/Basic/IconPathParser shape).
 
-    struct LeafCoder: Parser.Bidirectional {
-        typealias Input = Substring
-        typealias Buffer = Substring
-        typealias Output = Void
-        typealias Failure = Parser.Match.Error
-
-        func parse(_ input: inout Substring) throws(Failure) {
-            guard input.hasPrefix("leaf") else {
-                throw .literalMismatch(expected: "leaf", found: String(input))
-            }
-            input.removeFirst(4)
-        }
-
-        borrowing func serialize(_ output: Void, into buffer: inout Substring) throws(Failure) {
-            buffer += "leaf"
-        }
-    }
+    struct Leaf: Parser.Bidirectional {}
 
     @Test
     func `leaf coder serializes and parses through witness dispatch`() throws {
-        let coder = LeafCoder()
+        let coder = Leaf()
         var buffer: Substring = ""
         try Self.serializeViaWitness(coder, (), into: &buffer)
         #expect(buffer == "leaf")
@@ -74,27 +61,55 @@ struct `Coder Witness Dispatch` {
 
     // MARK: Shape 1 — body-declaring conformer (the router shape).
 
-    struct BodyCoder: Parser.Bidirectional {
-        typealias Input = Substring
-        typealias Output = Void
-        typealias Failure = Parser.Match.Error
-
-        var body: some Parser.Bidirectional<Substring, Void, Parser.Match.Error> {
-            LeafCoder()
-        }
-    }
+    struct Router: Parser.Bidirectional {}
 
     @Test
     func `body-declaring coder serializes through the serializer-side forwarder without recursing`() throws {
         // The original defect made this call recurse to stack exhaustion —
         // a crash, not an assertion failure. Reaching #expect at all is the
         // regression evidence.
-        let coder = BodyCoder()
+        let coder = Router()
         var buffer: Substring = ""
         try Self.serializeViaWitness(coder, (), into: &buffer)
         #expect(buffer == "leaf")
         var cursor = buffer
         try Self.parseViaWitness(coder, &cursor)
         #expect(cursor.isEmpty)
+    }
+}
+
+extension `Coder Witness Dispatch`.Leaf {
+    typealias Input = Substring
+    typealias Buffer = Substring
+    typealias Output = Void
+    // swift-linter:disable:next unification typealias
+    // REASON: Parser.Protocol associated-type witness (Failure); every conformer must declare this exact typealias.
+    typealias Failure = Parser.Match.Error
+
+    func parse(_ input: inout Substring) throws(Failure) {
+        guard input.hasPrefix("leaf") else {
+            throw .literalMismatch(expected: "leaf", found: String(input))
+        }
+        input.removeFirst(4)
+    }
+
+    borrowing func serialize(_ output: Void, into buffer: inout Substring) throws(Failure) {
+        buffer += "leaf"
+    }
+}
+
+extension `Coder Witness Dispatch`.Router {
+    // swift-linter:disable:next unification typealias
+    // REASON: Parser.Protocol associated-type witness (Input); every conformer must declare this exact typealias.
+    typealias Input = Substring
+    // swift-linter:disable:next unification typealias
+    // REASON: Parser.Protocol associated-type witness (Output); every conformer must declare this exact typealias.
+    typealias Output = Void
+    // swift-linter:disable:next unification typealias
+    // REASON: Parser.Protocol associated-type witness (Failure); every conformer must declare this exact typealias.
+    typealias Failure = Parser.Match.Error
+
+    var body: some Parser.Bidirectional<Substring, Void, Parser.Match.Error> {
+        `Coder Witness Dispatch`.Leaf()
     }
 }

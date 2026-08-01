@@ -22,29 +22,53 @@ public import Serializer_Primitives_Core
 
 // The String literal parser is a full bidirectional leaf: parse consumes the
 // literal from a `Substring`, serialize appends it (`Buffer == Input`).
-extension Swift.String: Coder.`Protocol`, Parser.Bidirectional {}
+extension Swift.String: Coder.`Protocol`, Parser.Bidirectional {
+    /// This leaf conformer has no delegating `body`.
+    public typealias Body = Never
+}
 
 // MARK: - The four B2-17 refinements
 
 // A Void-output `Always` round-trips: parse yields `()`, serialize is a no-op.
-extension Parser.Always: Coder.`Protocol`, Parser.Bidirectional where Output == Void {}
+extension Parser.Always: Coder.`Protocol`, Parser.Bidirectional where Output == Void {
+    /// This leaf conformer has no delegating `body`.
+    public typealias Body = Never
+}
 
 extension Parser.Take.Two: Coder.`Protocol`, Parser.Bidirectional
-where P0: Parser.Bidirectional, P1: Parser.Bidirectional {}
+where P0: Parser.Bidirectional, P1: Parser.Bidirectional {
+    /// This leaf conformer has no delegating `body`.
+    public typealias Body = Never
+}
 
 extension Parser.Skip.First: Coder.`Protocol`, Parser.Bidirectional
-where P0: Parser.Bidirectional, P1: Parser.Bidirectional {}
+where P0: Parser.Bidirectional, P1: Parser.Bidirectional {
+    /// This leaf conformer has no delegating `body`.
+    public typealias Body = Never
+}
 
 extension Parser.Skip.Second: Coder.`Protocol`, Parser.Bidirectional
-where P0: Parser.Bidirectional, P1: Parser.Bidirectional {}
+where P0: Parser.Bidirectional, P1: Parser.Bidirectional {
+    /// This leaf conformer has no delegating `body`.
+    public typealias Body = Never
+}
 
 // MARK: - Builder-entry and conversion-seam propagation
 
 extension Parser.Take.Sequence: Coder.`Protocol`, Parser.Bidirectional
-where Body: Parser.Bidirectional {}
+where Body: Parser.Bidirectional {
+    /// This leaf conformer has no delegating `body`.
+    public typealias Body = Never
+}
 
 extension Parser.OneOf.Sequence: Coder.`Protocol`, Parser.Bidirectional
-where Body: Parser.Bidirectional {}
+where Body: Parser.Bidirectional {
+    /// This leaf conformer has no delegating `body`.
+    public typealias Body = Never
+}
 
 extension Parser.Converted: Coder.`Protocol`, Parser.Bidirectional
-where Upstream: Parser.Bidirectional {}
+where Upstream: Parser.Bidirectional {
+    /// This leaf conformer has no delegating `body`.
+    public typealias Body = Never
+}
