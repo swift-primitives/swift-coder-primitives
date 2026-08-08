@@ -3,6 +3,12 @@
 //  swift-coder-primitives
 //
 
+// `Coder.Witness` and its leaf conformance deliberately live outside the
+// `Coder_Primitive` module that defines `Coder.Protocol`. Co-locating any
+// `Body == Never` conformer with that protocol makes downstream leaf witness
+// emission produce a bodiless `shared [serialized]` read accessor under SIL
+// verification. See swift-primitives/swift-coder-primitives#4.
+
 extension Coder {
     /// A closure-backed bidirectional coder — the canonical witness for
     /// ``Coder/Protocol``.

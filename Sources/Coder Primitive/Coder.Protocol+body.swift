@@ -84,13 +84,11 @@ extension Coder.`Protocol` where Self: ~Copyable, Body == Never {
     /// `Parser.Protocol`'s leaf default and `Serializer.Protocol`'s leaf
     /// default — and fails with "multiple matching properties named 'body'".
     /// The serializer side is already pinned by the forwarder above.
-    /// `@inlinable` works around a Swift toolchain defect (6.4.x-nightly and
-    /// main-nightly): downstream modules reference this cross-module accessor
-    /// as a bodiless `shared [serialized]` function and the SIL verifier
-    /// aborts ("public/package/shared function must have a body"). Serializing
-    /// the body removes the bodiless reference. Tracked:
-    /// swift-primitives/swift-coder-primitives#3; reproducer:
-    /// swift-institute/Issues#88.
+    /// Attributes do not repair the `Body == Never` default-witness verifier
+    /// defect. The defining `Coder_Primitive` module therefore contains no
+    /// leaf conformer; `Coder.Witness` lives in `Coder_Witness_Primitives`.
+    /// Tracked: swift-primitives/swift-coder-primitives#4; reproducer:
+    /// swift-institute/Issues/swift-issue-noncopyable-assoctype-never-bodyless-witness.
     @inlinable
     @_implements(Parser.`Protocol`,body)
     public var __parserLeafBody: Never {
