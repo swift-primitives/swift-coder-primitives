@@ -18,19 +18,27 @@ extension Coder {
     /// placement aborts compilation instead of remaining latent on NoAsserts
     /// toolchains.
     public struct Boundary {
+        /// Creates a downstream boundary control.
         public init() {}
     }
 }
 
 extension Coder.Boundary: Coder_Primitives.Coder.`Protocol` {
+    /// The parsed input.
     public typealias Input = Void
+    /// The parsed output.
     public typealias Output = Void
+    /// The serialized buffer.
     public typealias Buffer = Void
+    /// The control's failure type.
     public typealias Failure = Never
+    /// The parser-side witness body.
     public typealias Body = Never
 
+    /// Parses the boundary control's input.
     public func parse(_ input: inout Void) {}
 
+    /// Serializes the boundary control's output into its buffer.
     public func serialize(_ output: Void, into buffer: inout Void) {}
 }
 
