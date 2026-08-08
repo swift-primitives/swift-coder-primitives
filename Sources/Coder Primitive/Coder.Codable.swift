@@ -30,7 +30,7 @@ extension Coder {
     /// ```
     public protocol Codable {
         /// The canonical coder type for this value.
-        associatedtype Coder: Coder_Primitives.Coder.`Protocol`
+        associatedtype Coder: Coder_Primitive.Coder.`Protocol`
 
         /// The canonical coder instance.
         static var coder: Coder { get }
