@@ -28,7 +28,8 @@ struct Test {
     /// when the value matches (unapply mismatch throws `.absentCase`).
     static func constant(
         _ text: String
-    ) -> Parser.Converted<String, Parser.Conversion.Witness<Void, String, Parser.Conversion.Error>> {
+    ) -> Parser.Converted<String, Parser.Conversion.Witness<Void, String, Parser.Conversion.Error>>
+    {
         Parser.Converted(
             upstream: text,
             downstream: Parser.Conversion.Witness<Void, String, Parser.Conversion.Error>(

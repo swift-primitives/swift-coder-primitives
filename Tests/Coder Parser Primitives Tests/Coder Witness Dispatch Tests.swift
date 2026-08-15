@@ -64,7 +64,9 @@ struct `Coder Witness Dispatch` {
     struct Router: Parser.Bidirectional {}
 
     @Test
-    func `body-declaring coder serializes through the serializer-side forwarder without recursing`() throws {
+    func `body-declaring coder serializes through the serializer-side forwarder without recursing`()
+        throws
+    {
         // The original defect made this call recurse to stack exhaustion —
         // a crash, not an assertion failure. Reaching #expect at all is the
         // regression evidence.
