@@ -80,7 +80,9 @@ extension Coder.Witness: Coder.`Protocol` {
     @inlinable
     public var body: Never {
         borrowing get {
-            return fatalError("Coder.Witness is a leaf — parse(_:) and serialize(_:into:) are implemented directly via stored closures")
+            return fatalError(
+                "Coder.Witness is a leaf — parse(_:) and serialize(_:into:) are implemented directly via stored closures"
+            )
         }
     }
 

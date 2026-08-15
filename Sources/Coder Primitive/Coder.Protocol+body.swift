@@ -13,6 +13,7 @@ public import Serializer_Primitives_Core
 
 extension Parser.`Protocol` where Self: ~Copyable {
 
+    // swift-format-ignore: AlwaysUseLowerCamelCase
     /// Parser-side accessor for `body`.
     ///
     /// In this extension only
@@ -33,6 +34,7 @@ extension Parser.`Protocol` where Self: ~Copyable {
 
 extension Coder.`Protocol` where Self: ~Copyable {
 
+    // swift-format-ignore: AlwaysUseLowerCamelCase
     /// Satisfies ``Serializer/Protocol``'s `body` requirement on behalf of
     /// every ``Coder/Protocol`` conformer, forwarding to the (unified)
     /// parser-side ``Parser/Protocol/body``.
@@ -76,6 +78,7 @@ extension Coder.`Protocol` where Self: ~Copyable {
 
 extension Coder.`Protocol` where Self: ~Copyable, Body == Never {
 
+    // swift-format-ignore: AlwaysUseLowerCamelCase
     /// Pins the PARSER-side `body` witness for leaf coders (`Body == Never`,
     /// `parse`/`serialize` implemented directly).
     ///
