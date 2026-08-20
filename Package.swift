@@ -1,15 +1,15 @@
-// swift-tools-version: 6.3.3
+// swift-tools-version: 6.4
 
 import PackageDescription
 
 let package = Package(
     name: "swift-coder-primitives",
     platforms: [
-        .macOS("27"),
-        .iOS("27"),
-        .tvOS("27"),
-        .watchOS("27"),
-        .visionOS("27"),
+        .macOS(.v27),
+        .iOS(.v27),
+        .tvOS(.v27),
+        .watchOS(.v27),
+        .visionOS(.v27),
     ],
     products: [
         .library(
@@ -34,18 +34,36 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-parser-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-serializer-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-either-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-product-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-pair-primitives.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-primitives/swift-parser-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-serializer-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-either-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-product-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-pair-primitives.git",
+            branch: "main"
+        ),
     ],
     targets: [
         .target(
             name: "Coder Primitive",
             dependencies: [
                 .product(name: "Parser Primitives Core", package: "swift-parser-primitives"),
-                .product(name: "Serializer Primitives Core", package: "swift-serializer-primitives"),
+                .product(
+                    name: "Serializer Primitives Core",
+                    package: "swift-serializer-primitives"
+                ),
             ]
         ),
         // The protocol-defining module must not contain a `Body == Never`
@@ -55,7 +73,7 @@ let package = Package(
         .target(
             name: "Coder Witness Primitives",
             dependencies: [
-                .target(name: "Coder Primitive"),
+                .target(name: "Coder Primitive")
             ]
         ),
         // Compatibility umbrella: existing consumers keep importing
@@ -77,7 +95,10 @@ let package = Package(
                 "Coder Primitives",
                 .product(name: "Parser Primitives", package: "swift-parser-primitives"),
                 .product(name: "Parser Pair Primitives", package: "swift-parser-primitives"),
-                .product(name: "Serializer Primitives Core", package: "swift-serializer-primitives"),
+                .product(
+                    name: "Serializer Primitives Core",
+                    package: "swift-serializer-primitives"
+                ),
                 .product(name: "Either Primitives", package: "swift-either-primitives"),
                 .product(name: "Product Primitives", package: "swift-product-primitives"),
                 .product(name: "Pair Primitives", package: "swift-pair-primitives"),
@@ -106,7 +127,7 @@ let package = Package(
                 .unsafeFlags([
                     "-Xfrontend", "-sil-verify-all",
                     "-Xfrontend", "-whole-module-optimization",
-                ]),
+                ])
             ]
         ),
         .testTarget(
