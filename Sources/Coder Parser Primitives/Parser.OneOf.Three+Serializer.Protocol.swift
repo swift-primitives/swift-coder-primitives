@@ -1,11 +1,3 @@
-//
-//  Parser.OneOf.Three+Serializer.Protocol.swift
-//  swift-coder-primitives
-//
-//  Append emission for the three-way alternation with value-checkpoint
-//  backtracking (buffer restored by value copy between attempts).
-//
-
 public import Parser_Primitives
 public import Product_Primitives
 public import Serializer_Primitives_Core
@@ -18,13 +10,9 @@ where
     P0.Buffer == P1.Buffer,
     P1.Buffer == P2.Buffer
 {
-    /// The buffer type this serializer appends to.
+
     public typealias Buffer = P0.Buffer
 
-    /// Explicit leaf body: both `Parser.Protocol` and `Serializer.Protocol`
-    /// provide a `Body == Never` default getter; without this override Swift
-    /// cannot pick between the two inherited candidates (the Coder.Witness
-    /// precedent).
     @inlinable
     public var body: Never {
         borrowing get {
@@ -32,8 +20,6 @@ where
         }
     }
 
-    /// Tries each serializer in order, restoring the buffer between attempts,
-    /// until one succeeds.
     @inlinable
     public func serialize(
         _ output: Output,

@@ -1,10 +1,3 @@
-//
-//  Coder Module Boundary Tests.swift
-//  swift-coder-primitives
-//
-//  Runtime binding for the cross-module SIL-verification control.
-//
-
 import Coder_Module_Boundary_Control
 import Coder_Primitives
 import Testing

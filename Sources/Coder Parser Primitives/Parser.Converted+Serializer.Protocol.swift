@@ -1,26 +1,12 @@
-//
-//  Parser.Converted+Serializer.Protocol.swift
-//  swift-coder-primitives
-//
-//  Append emission through the conversion seam: un-apply the conversion,
-//  then serialize with the upstream. The seam is order-agnostic, so the
-//  shape is identical to the retired print — only the emission discipline
-//  (append) differs.
-//
-
 public import Either_Primitives
 public import Parser_Primitives
 public import Serializer_Primitives_Core
 
 extension Parser.Converted: @retroactive Serializer.`Protocol`
 where Upstream: Serializer.`Protocol` {
-    /// The buffer type this serializer appends to.
+
     public typealias Buffer = Upstream.Buffer
 
-    /// Explicit leaf body: both `Parser.Protocol` and `Serializer.Protocol`
-    /// provide a `Body == Never` default getter; without this override Swift
-    /// cannot pick between the two inherited candidates (the Coder.Witness
-    /// precedent).
     @inlinable
     public var body: Never {
         borrowing get {
@@ -28,7 +14,6 @@ where Upstream: Serializer.`Protocol` {
         }
     }
 
-    /// Un-applies the conversion, then serializes with the upstream.
     @inlinable
     public func serialize(
         _ output: Output,

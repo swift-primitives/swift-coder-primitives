@@ -66,19 +66,14 @@ let package = Package(
                 ),
             ]
         ),
-        // The protocol-defining module must not contain a `Body == Never`
-        // conformer. Keeping the closure-backed leaf in a sibling target
-        // prevents its default `body.read` accessor from being serialized
-        // into downstream leaf modules as a bodiless SIL function.
+
         .target(
             name: "Coder Witness Primitives",
             dependencies: [
                 .target(name: "Coder Primitive")
             ]
         ),
-        // Compatibility umbrella: existing consumers keep importing
-        // `Coder_Primitives`, while the defining and conforming declarations
-        // remain separated at the module boundary.
+
         .target(
             name: "Coder Primitives",
             dependencies: [
@@ -86,8 +81,6 @@ let package = Package(
                 .target(name: "Coder Witness Primitives"),
             ]
         ),
-
-        // MARK: - Parser combinator emission rows (the coder-unification surface)
 
         .target(
             name: "Coder Parser Primitives",
@@ -105,8 +98,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Tests
-
         .target(
             name: "Coder Primitives Test Support",
             dependencies: ["Coder Primitives"],
@@ -122,8 +113,7 @@ let package = Package(
             dependencies: [.target(name: "Coder Primitives")],
             path: "Tests/Coder Module Boundary Control",
             swiftSettings: [
-                // Binding two-module control for swift-coder-primitives#4:
-                // this downstream leaf must survive full SIL verification.
+
                 .unsafeFlags([
                     "-Xfrontend", "-sil-verify-all",
                     "-Xfrontend", "-whole-module-optimization",
