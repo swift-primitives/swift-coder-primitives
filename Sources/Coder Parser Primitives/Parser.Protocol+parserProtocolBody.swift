@@ -7,7 +7,7 @@
 //  witness by the builder-entry wrappers in this target.
 //
 
-public import Parser_Primitives
+import Parser_Primitives
 
 extension Parser.`Protocol` where Self: ~Copyable, Body: Copyable {
     /// The composed parser body, fetched through the `Parser.Protocol`

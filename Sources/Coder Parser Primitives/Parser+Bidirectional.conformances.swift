@@ -16,7 +16,7 @@
 
 public import Coder_Primitives
 public import Parser_Primitives
-public import Serializer_Primitives_Core
+import Serializer_Primitives_Core
 
 // MARK: - Leaf bidirectional declaration
 

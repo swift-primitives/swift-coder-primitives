@@ -6,7 +6,7 @@
 //  elements at the buffer's end (the retired print inserted at the front).
 //
 
-public import Parser_Primitives
+import Parser_Primitives
 public import Serializer_Primitives_Core
 
 extension Swift.Array: @retroactive Serializer.`Protocol` where Element: Equatable {
